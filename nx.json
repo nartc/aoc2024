@@ -1,0 +1,17 @@
+{
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "namedInputs": {
+    "default": [
+      "{projectRoot}/**/*",
+      "sharedGlobals"
+    ],
+    "production": [
+      "default"
+    ],
+    "sharedGlobals": []
+  },
+  "plugins": [
+    "ts-aoc-starter/src/plugins/dynamic-tasks.js"
+  ],
+  "defaultProject": "aoc"
+}

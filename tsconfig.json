@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "module": "nodenext",
+    "target": "ESNext",
+    "types": ["node"],
+    "allowImportingTsExtensions": true,
+    "noEmit": true
+  }
+}
