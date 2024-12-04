@@ -2,7 +2,9 @@
   "name": "@aoc2024/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "day1": "nx 1-b-sample"
+  },
   "private": true,
   "dependencies": {
     "chalk": "latest",
