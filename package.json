@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "day1": "nx 1-b-sample"
+    "debug": "nx 2-b"
   },
   "private": true,
   "dependencies": {
