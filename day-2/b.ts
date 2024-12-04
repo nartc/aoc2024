@@ -1,14 +1,8 @@
 import { runSolution } from '../utils.ts';
-import * as process from "node:process";
 
 /** provide your solution as the return of this function */
-export async function day2a(data: string[]) {
-  const reports: number[][] = []
-
-  for (const line of data) {
-    reports.push(line.split(' ').map(Number))
-  }
-
+export async function day2b(data: string[]) {
+  const reports = data.map(line => line.split(' ').map(Number));
   let safeCount = reports.length;
 
   for (const levels of reports) {
@@ -17,11 +11,8 @@ export async function day2a(data: string[]) {
 
     let stillViolating = true;
     for (const violatingIndex of violatingIndices) {
-      const cloned = levels.slice();
-      cloned.splice(violatingIndex, 1);
-
-      const violated = processLevels(cloned).length > 0;
-      if (!violated) {
+      const isViolated = processLevels(levels, violatingIndex).length > 0;
+      if (!isViolated) {
         stillViolating = false;
         // as soon as we find a non violating level, we can consider this as safe
         break;
@@ -34,46 +25,45 @@ export async function day2a(data: string[]) {
   return safeCount;
 }
 
-function processLevels(levels: number[]) {
+function processLevels(levels: number[], skipIndex?: number) {
   const violatingIndices: number[] = [];
   let state: 'increasing' | 'decreasing';
 
   for (let i = 0; i < levels.length; i++) {
-    const currentLevel = levels[i];
-    const nextLevel = levels[i + 1];
-    const previousLevel = levels[i - 1];
+    if (i === skipIndex) continue;
+    const nextIndex = i + 1 === skipIndex ? i + 2 : i + 1;
+    if (nextIndex >= levels.length) break;
 
-    // at the end
-    if (nextLevel == null) break;
+    const current = levels[i];
+    const next = levels[nextIndex];
 
     // if 2 levels are the same, we're not safe
-    if (currentLevel === nextLevel) {
+    if (current === next) {
       violatingIndices.push(i);
       break;
     }
 
     // difference between current and next level is more than 3
-    if (Math.abs(currentLevel - nextLevel) > 3) {
-      violatingIndices.push(i, i + 1);
+    if (Math.abs(current - next) > 3) {
+      violatingIndices.push(i, nextIndex);
       break;
     }
 
     // if we don't have the state, we calculate it then skip to the next iteration
     if (!state) {
-      state = currentLevel > nextLevel ? 'decreasing' : 'increasing';
+      state = current > next ? 'decreasing' : 'increasing';
       continue;
     }
 
-    if (state === 'increasing' && currentLevel > nextLevel ||
-      state === 'decreasing' && currentLevel < nextLevel
-    ) {
-      violatingIndices.push(i, i + 1);
-      if (previousLevel) violatingIndices.push(i - 1);
+    if (state === 'increasing' && current > next ||
+        state === 'decreasing' && current < next) {
+      violatingIndices.push(i, nextIndex);
+      const prevIndex = i - 1;
+      if (prevIndex >= 0 && prevIndex !== skipIndex) violatingIndices.push(prevIndex);
       break;
     }
   }
 
   return violatingIndices;
 }
-
-await runSolution(day2a);
+await runSolution(day2b);

@@ -2,13 +2,14 @@ import chalk from 'chalk';
 import { readFile } from 'fs/promises';
 import { join } from 'path';
 
-export async function runSolution(solution: (data: string[]) => any) {
+export async function runSolution(solution: (data: string[]) => unknown) {
   const data = await readData();
   const answer = await solution(data);
   console.log(chalk.bgGreen('Your Answer:'), chalk.green(answer));
 }
 
 export async function readData() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, fullPath, dataSet] = process.argv as
     | [string, string, string]
     | [string, string];
@@ -18,6 +19,8 @@ export async function readData() {
     .map((x, i) => (i === 0 ? +x.split('-')[1] : x)) as [number, 'a' | 'b'];
   const fileName = createFileName(day, part, dataSet);
   const data = (await readFile(fileName)).toString().split('\n');
+  const last = data.pop();
+  if (last !== '' || last !== undefined) data.push(last);
   return data;
 }
 
